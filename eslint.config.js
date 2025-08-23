@@ -1,17 +1,31 @@
 ﻿import js from "@eslint/js";
 import react from "eslint-plugin-react";
 import reactHooks from "eslint-plugin-react-hooks";
+import globals from "globals";
 
 export default [
+  // התעלמות גלובלית מכל מה שלא צריך לסרוק
+  {
+    ignores: [
+      "node_modules/**",
+      "dist/**",
+      "dist-ssr/**",
+      ".husky/**",
+      ".github/**",
+      "coverage/**"
+    ],
+  },
+
   js.configs.recommended,
+
   {
     files: ["**/*.{js,jsx,ts,tsx}"],
-    ignores: ["dist/**", "node_modules/**"],
     languageOptions: {
       ecmaVersion: "latest",
       sourceType: "module",
       parserOptions: { ecmaFeatures: { jsx: true } },
-      globals: { window: "readonly", document: "readonly", JSX: "readonly" }
+      // גלובלס של דפדפן + ES2021 (כולל window/document/console/URL/Blob/alert וכו')
+      globals: { ...globals.browser, ...globals.es2021, JSX: "readonly" },
     },
     plugins: { react, "react-hooks": reactHooks },
     rules: {

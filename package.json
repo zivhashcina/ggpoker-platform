@@ -1,4 +1,4 @@
-﻿{
+{
     "name":  "ggpoker-platform",
     "private":  true,
     "version":  "0.0.0",
@@ -53,7 +53,7 @@
                         "**/*.{js,jsx,ts,tsx,json,css,md}":  "prettier --write",
                         "**/*.{js,jsx,ts,tsx}":  [
                                                      "eslint --fix",
-                                                     "vitest --run --reporter=dot --coverage=false"
+                                                     "vitest --run --passWithNoTests --reporter=dot --coverage=false"
                                                  ]
                     }
 }
