@@ -1,0 +1,14 @@
+﻿name: Feature request
+about: Suggest an idea
+title: "[Feat]: "
+labels: enhancement
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      placeholder: What problem are you trying to solve?
+      value: |
+        As a ...
+        I want ...
+        So that ...

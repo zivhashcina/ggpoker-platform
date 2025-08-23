@@ -1,0 +1,15 @@
+﻿name: Lighthouse
+on:
+  schedule:
+    - cron: '0 2 * * 1'  # Weekly
+  workflow_dispatch:
+jobs:
+  lhci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Audit https://zivhashcina.github.io/ggpoker-platform/
+        uses: treosh/lighthouse-ci-action@v10
+        with:
+          urls: |
+            https://zivhashcina.github.io/ggpoker-platform/
+          temporaryPublicStorage: true
