@@ -1,22 +1,12 @@
 ﻿<!doctype html>
-<html lang="en">
+<html lang="he" dir="rtl">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>GG Poker Platform</title>
-    <!-- CSP רכה לפיתוח בלבד כדי לאפשר eval ש-Vite צריך במצב dev -->
-    <meta http-equiv="Content-Security-Policy" content="
-  default-src 'self';
-  script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.google.com https://www.gstatic.com https://www.recaptcha.net;
-  connect-src *;
-  img-src 'self' data: blob: https://www.google.com https://www.gstatic.com;
-  style-src 'self' 'unsafe-inline';
-  frame-src 'self' https://www.google.com https://www.gstatic.com https://www.recaptcha.net;
-">
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
-

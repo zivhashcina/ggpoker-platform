@@ -1,2 +1,2 @@
 #!/usr/bin/env sh
- npx --no -- lint-staged
+ npx --no -- lint-staged --config .lintstagedrc.json --allow-empty
