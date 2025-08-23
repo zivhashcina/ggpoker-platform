@@ -1,5 +1,8 @@
-﻿/* eslint config */
+﻿/* eslint config (flat) */
 const eslint = require("@eslint/js");
+const react = require("eslint-plugin-react");
+const reactHooks = require("eslint-plugin-react-hooks");
+
 module.exports = [
   eslint.configs.recommended,
   {
@@ -8,12 +11,10 @@ module.exports = [
     languageOptions: {
       ecmaVersion: "latest",
       sourceType: "module",
+      parserOptions: { ecmaFeatures: { jsx: true } },  // JSX ✅
       globals: { window: "readonly", document: "readonly", JSX: "readonly" }
     },
-    plugins: {
-      react: require("eslint-plugin-react"),
-      "react-hooks": require("eslint-plugin-react-hooks")
-    },
+    plugins: { react, "react-hooks": reactHooks },
     rules: {
       "no-unused-vars": ["warn",{ "argsIgnorePattern":"^_" }],
       "react/react-in-jsx-scope": "off",
