@@ -1,37 +1,78 @@
-﻿// src/LandingPage.jsx
-import React, { useState } from "react";
-import { db } from "./firebase";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+﻿import React, { useState } from 'react';
+import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
+import { db, auth } from './firebase';
 
 export default function LandingPage() {
-  const [formData, setFormData] = useState({ fullName: "", phone: "", email: "" });
-  const [status, setStatus] = useState("");
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [msg, setMsg] = useState('');
 
-  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
-
-  const handleSubmit = async (e) => {
+  async function onSubmit(e) {
     e.preventDefault();
-    setStatus("שולח...");
-    try {
-      await addDoc(collection(db, "registrations"), { ...formData, createdAt: serverTimestamp() });
-      setStatus("🟢 ההרשמה בוצעה בהצלחה!");
-      setFormData({ fullName: "", phone: "", email: "" });
-    } catch (error) {
-      console.error(error);
-      setStatus("🔴 שגיאה בשליחה");
+    if (!name || !phone || !email) {
+      setMsg('נא למלא שם/טלפון/אימייל');
+      return;
     }
-  };
+    setBusy(true);
+    setMsg('');
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const campaignRef = params.get('ref');
+      const agentLocalRef = localStorage.getItem('agentUid');
+      const agentUid = auth.currentUser?.uid || agentLocalRef || null;
+
+      await addDoc(collection(db, 'registrations'), {
+        name,
+        phone,
+        email,
+        ref: agentUid || campaignRef || null,
+        createdAt: serverTimestamp(),
+      });
+
+      setMsg('✅ נרשמת בהצלחה! נחזור אליך בהקדם.');
+      setName('');
+      setPhone('');
+      setEmail('');
+    } catch (err) {
+      console.error('register error', err);
+      setMsg('❌ שגיאה בשליחה. נסה/י שוב');
+    } finally {
+      setBusy(false);
+    }
+  }
 
   return (
-    <div dir="rtl" className="min-h-screen bg-gradient-to-b from-white to-gray-100 p-4 flex flex-col items-center justify-center">
-      <h1 className="text-3xl font-bold mb-4 text-center text-blue-900">הרשמה לפלטפורמת GG Poker</h1>
-      <form onSubmit={handleSubmit} className="bg-white shadow-md rounded p-6 w-full max-w-md space-y-4">
-        <input name="fullName" placeholder="שם מלא" value={formData.fullName} onChange={handleChange} className="w-full border border-gray-300 rounded p-2" required />
-        <input name="phone" placeholder="מספר טלפון" value={formData.phone} onChange={handleChange} className="w-full border border-gray-300 rounded p-2" required />
-        <input type="email" name="email" placeholder="כתובת אימייל" value={formData.email} onChange={handleChange} className="w-full border border-gray-300 rounded p-2" required />
-        <button type="submit" className="bg-blue-700 text-white py-2 px-4 rounded hover:bg-blue-800">שלח טופס</button>
-        <div className="text-sm text-center">{status}</div>
+    <main className="mx-auto max-w-lg p-6">
+      <h1 className="text-2xl font-bold mb-4">הרשמה</h1>
+      <form onSubmit={onSubmit} className="space-y-3">
+        <input
+          className="w-full border p-2 rounded"
+          placeholder="שם מלא"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <input
+          className="w-full border p-2 rounded"
+          placeholder="טלפון"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+        />
+        <input
+          className="w-full border p-2 rounded"
+          placeholder="אימייל"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <button
+          disabled={busy}
+          className="px-4 py-2 rounded bg-black text-white disabled:opacity-60"
+        >
+          {busy ? 'שולח...' : 'שליחה'}
+        </button>
+        {msg && <div className="text-sm mt-2">{msg}</div>}
       </form>
-    </div>
+    </main>
   );
 }
